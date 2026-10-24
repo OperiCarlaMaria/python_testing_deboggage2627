@@ -20,14 +20,18 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
-def getClubByEmail(email):
+def getClubByEmail(email): ##bug 1 emails
     return next((club for club in clubs if club['email'] == email), None)
+
+def bookPlaces(club, competition, placesRequired): ##bug 2 points
+    club['points'] = int(club['points']) - placesRequired
+    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary', methods=['POST'])
+@app.route('/showSummary', methods=['POST']) ## changement de route bug 1 emails
 def showSummary():
     club = getClubByEmail(request.form.get('email', ''))
     if club is None:
@@ -47,12 +51,12 @@ def book(competition,club):
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])## changement de route bug 2 points
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+    bookPlaces(club, competition, placesRequired)
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 

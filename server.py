@@ -38,8 +38,13 @@ def bookPlaces(club, competition, placesRequired):
     booked = competition.setdefault('booked', {})
     booked[club['name']] = booked.get(club['name'], 0) + placesRequired
     
-## bug 3 points insuffisant et réservation allant au delà/ bug 4
+## bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5
 def validatePurchase(club, competition, placesRequired):
+    available = int(competition['numberOfPlaces'])
+    if available <= 0:
+        return "This competition is full."
+    if placesRequired > available:
+        return "Not enough places available in this competition."
     if placesRequired > int(club['points']):
         return "Not enough points to book that many places."
     if getPlacesBooked(club, competition) + placesRequired > MAX_PLACES_PER_COMPETITION:

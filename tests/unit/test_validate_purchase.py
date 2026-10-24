@@ -45,3 +45,24 @@ def test_validate_purchase_accepts_when_total_with_previous_bookings_reaches_12(
     club = {"name": "Test Club", "points": "20"}
     competition = {"name": "Test Comp", "numberOfPlaces": "25", "booked": {"Test Club": 8}}
     assert validatePurchase(club, competition, 4) is None
+    
+    
+## bug 5 test reserver plus de place qu'il n'en reste 
+def test_validate_purchase_rejects_more_places_than_available():
+    club = {"name": "Test Club", "points": "20"}
+    competition = {"name": "Test Comp", "numberOfPlaces": "3"}
+    error = validatePurchase(club, competition, 5)
+    assert error == "Not enough places available in this competition."
+
+
+def test_validate_purchase_accepts_places_equal_to_available():
+    club = {"name": "Test Club", "points": "20"}
+    competition = {"name": "Test Comp", "numberOfPlaces": "5"}
+    assert validatePurchase(club, competition, 5) is None
+
+
+def test_validate_purchase_rejects_when_competition_is_full():
+    club = {"name": "Test Club", "points": "20"}
+    competition = {"name": "Test Comp", "numberOfPlaces": "0"}
+    error = validatePurchase(club, competition, 1)
+    assert error == "This competition is full."

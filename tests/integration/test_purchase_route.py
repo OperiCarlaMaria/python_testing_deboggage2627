@@ -105,3 +105,12 @@ def test_purchase_rejected_when_competition_is_full(client):
     assert b"This competition is full." in response.data
     assert b"Great-booking complete!" not in response.data
     assert b"Points available: 4" in response.data
+    
+    
+## bug 6 test date passée
+def test_purchase_rejected_for_past_competition(client):
+    response = book(client, "Simply Lift", "Past Competition", "2")
+    assert b"This competition is already over." in response.data
+    assert b"Great-booking complete!" not in response.data
+    assert b"Points available: 13" in response.data
+    assert b"Number of Places: 7" in response.data

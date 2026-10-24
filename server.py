@@ -25,6 +25,22 @@ clubs = loadClubs()
 def getClubByEmail(email): 
     return next((club for club in clubs if club['email'] == email), None)
 
+## "bug" 7 eviter les erreurs du genre entré des chiffre négatifs etc...
+def getClubByName(name):
+    return next((club for club in clubs if club['name'] == name), None)
+
+
+def getCompetitionByName(name):
+    return next((c for c in competitions if c['name'] == name), None)
+
+
+def parsePlaces(raw):
+    try:
+        places = int(raw)
+    except (TypeError, ValueError):
+        return None
+    return places if places >= 1 else None
+
 ##bug 6 date compétition 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -80,23 +96,37 @@ def showSummary():
         return render_template('index.html')
     return render_template('welcome.html', club=club, competitions=competitions)
 
-## bug 6 date compétition
+## bug 6 date compétition/"bug" 7
 @app.route('/book/<competition>/<club>')
-def book(competition,club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
-        if isCompetitionPast(foundCompetition):
-            flash("This competition is already over.")
-            return render_template('welcome.html', club=foundClub, competitions=competitions)
-        return render_template('booking.html', club=foundClub, competition=foundCompetition)
+def book(competition, club):
+    foundClub = getClubByName(club)
+    if foundClub is None:
+        flash("Something went wrong-please try again")
+        return render_template('index.html'), 404
+    foundCompetition = getCompetitionByName(competition)
+    if foundCompetition is None:
+        flash("Something went wrong-please try again")
+        return render_template('welcome.html', club=foundClub, competitions=competitions), 404
+    if isCompetitionPast(foundCompetition):
+        flash("This competition is already over.")
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
+    return render_template('booking.html', club=foundClub, competition=foundCompetition)
 
-## changement de route bug 2 points et bug 3
+## changement de route bug 2 points et bug 3/ "bug" 7
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
+    club = getClubByName(request.form.get('club', ''))
+    if club is None:
+        flash("Something went wrong-please try again")
+        return render_template('index.html'), 404
+    competition = getCompetitionByName(request.form.get('competition', ''))
+    if competition is None:
+        flash("Something went wrong-please try again")
+        return render_template('welcome.html', club=club, competitions=competitions), 404
+    placesRequired = parsePlaces(request.form.get('places'))
+    if placesRequired is None:
+        flash("Please enter a valid number of places (1 or more).")
+        return render_template('welcome.html', club=club, competitions=competitions)
     error = validatePurchase(club, competition, placesRequired)
     if error:
         flash(error)

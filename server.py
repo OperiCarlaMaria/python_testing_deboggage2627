@@ -20,18 +20,27 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
-def getClubByEmail(email): ##bug 1 emails
+## bug 1 emails
+def getClubByEmail(email): 
     return next((club for club in clubs if club['email'] == email), None)
 
-def bookPlaces(club, competition, placesRequired): ##bug 2 points
+## bug 2 points
+def bookPlaces(club, competition, placesRequired): 
     club['points'] = int(club['points']) - placesRequired
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+    
+## bug 3 points insuffisant et réservation allant au delà
+def validatePurchase(club, competition, placesRequired):
+    if placesRequired > int(club['points']):
+        return "Not enough points to book that many places."
+    return None
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary', methods=['POST']) ## changement de route bug 1 emails
+## changement de route bug 1 emails
+@app.route('/showSummary', methods=['POST']) 
 def showSummary():
     club = getClubByEmail(request.form.get('email', ''))
     if club is None:
@@ -50,12 +59,16 @@ def book(competition,club):
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 
-
-@app.route('/purchasePlaces', methods=['POST'])## changement de route bug 2 points
+## changement de route bug 2 points et bug 3
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+    error = validatePurchase(club, competition, placesRequired)
+    if error:
+        flash(error)
+        return render_template('welcome.html', club=club, competitions=competitions)
     bookPlaces(club, competition, placesRequired)
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)

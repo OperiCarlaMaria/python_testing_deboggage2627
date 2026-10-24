@@ -24,15 +24,26 @@ clubs = loadClubs()
 def getClubByEmail(email): 
     return next((club for club in clubs if club['email'] == email), None)
 
-## bug 2 points
-def bookPlaces(club, competition, placesRequired): 
+## bug 4 limite de réservation 
+MAX_PLACES_PER_COMPETITION = 12
+
+
+def getPlacesBooked(club, competition):
+    return competition.get('booked', {}).get(club['name'], 0)
+
+## bug 2 points/ bug 4
+def bookPlaces(club, competition, placesRequired):
     club['points'] = int(club['points']) - placesRequired
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+    booked = competition.setdefault('booked', {})
+    booked[club['name']] = booked.get(club['name'], 0) + placesRequired
     
-## bug 3 points insuffisant et réservation allant au delà
+## bug 3 points insuffisant et réservation allant au delà/ bug 4
 def validatePurchase(club, competition, placesRequired):
     if placesRequired > int(club['points']):
         return "Not enough points to book that many places."
+    if getPlacesBooked(club, competition) + placesRequired > MAX_PLACES_PER_COMPETITION:
+        return "You cannot book more than 12 places per competition."
     return None
 
 @app.route('/')

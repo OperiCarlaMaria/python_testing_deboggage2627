@@ -1,16 +1,4 @@
-import pytest ##test pour les emails
-
-from server import app
-
-
-@pytest.fixture
-def client():
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
-        
-        
-import copy ##test pour les points
+import copy
 
 import pytest
 
@@ -20,10 +8,18 @@ from server import app
 
 @pytest.fixture(autouse=True)
 def reset_data():
-    """Restore clubs and competitions after each test."""
+    """Give tests stable data, and restore it after each test."""
     original_clubs = copy.deepcopy(server.clubs)
     original_competitions = copy.deepcopy(server.competitions)
+
+    for competition in server.competitions:
+        competition["date"] = "2099-01-01 10:00:00"
+    server.competitions.append(
+        {"name": "Past Competition", "date": "2020-01-01 10:00:00", "numberOfPlaces": "7"}
+    )
+
     yield
+
     server.clubs[:] = original_clubs
     server.competitions[:] = original_competitions
 

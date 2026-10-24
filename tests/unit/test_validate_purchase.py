@@ -66,3 +66,10 @@ def test_validate_purchase_rejects_when_competition_is_full():
     competition = {"name": "Test Comp", "numberOfPlaces": "0"}
     error = validatePurchase(club, competition, 1)
     assert error == "This competition is full."
+    
+## bug 6 test date passée
+def test_validate_purchase_rejects_past_competition():
+    club = {"name": "Test Club", "points": "20"}
+    competition = {"name": "Test Comp", "numberOfPlaces": "25", "date": "2020-01-01 10:00:00"}
+    error = validatePurchase(club, competition, 2)
+    assert error == "This competition is already over."

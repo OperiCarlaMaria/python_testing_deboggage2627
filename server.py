@@ -1,4 +1,5 @@
 import json
+from datetime import datetime ##ajout d'import pour les dates
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
@@ -24,6 +25,19 @@ clubs = loadClubs()
 def getClubByEmail(email): 
     return next((club for club in clubs if club['email'] == email), None)
 
+##bug 6 date compétition 
+DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
+
+def isCompetitionPast(competition):
+    date = competition.get('date')
+    if not date:
+        return False
+    return datetime.strptime(date, DATE_FORMAT) < datetime.now()
+
+
+app.jinja_env.globals['is_past'] = isCompetitionPast
+
 ## bug 4 limite de réservation 
 MAX_PLACES_PER_COMPETITION = 12
 
@@ -38,9 +52,11 @@ def bookPlaces(club, competition, placesRequired):
     booked = competition.setdefault('booked', {})
     booked[club['name']] = booked.get(club['name'], 0) + placesRequired
     
-## bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5
+## bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5/ bug 6
 def validatePurchase(club, competition, placesRequired):
     available = int(competition['numberOfPlaces'])
+    if isCompetitionPast(competition):
+        return "This competition is already over."
     if available <= 0:
         return "This competition is full."
     if placesRequired > available:
@@ -64,16 +80,16 @@ def showSummary():
         return render_template('index.html')
     return render_template('welcome.html', club=club, competitions=competitions)
 
-
+## bug 6 date compétition
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
-        return render_template('booking.html',club=foundClub,competition=foundCompetition)
-    else:
-        flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        if isCompetitionPast(foundCompetition):
+            flash("This competition is already over.")
+            return render_template('welcome.html', club=foundClub, competitions=competitions)
+        return render_template('booking.html', club=foundClub, competition=foundCompetition)
 
 ## changement de route bug 2 points et bug 3
 @app.route('/purchasePlaces', methods=['POST'])

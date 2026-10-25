@@ -1,0 +1,13 @@
+# AMÉLIORATION : configuration de la mesure de couverture
+[run]
+# On mesure le code de l'application (server.py), pas les tests eux-mêmes
+source = .
+omit =
+    tests/*
+    venv/*
+    static/*
+# Couverture des branches (if/else), pas seulement des lignes
+branch = True
+
+[report]
+show_missing = True

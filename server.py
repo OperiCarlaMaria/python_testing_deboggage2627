@@ -40,6 +40,15 @@ def getClubByName(name):
 def getCompetitionByName(name):
     return next((c for c in competitions if c['name'] == name), None)
 
+def getClubsPoints():
+    # BUG n°11 : données du tableau public des points
+    # On ne garde que le nom et les points (jamais l'email), triés par nom
+    # pour ne favoriser aucun club
+    return sorted(
+        [{'name': c['name'], 'points': int(c['points'])} for c in clubs],
+        key=lambda entry: entry['name'],
+    )
+
 
 def parsePlaces(raw):
     try:
@@ -143,7 +152,13 @@ def purchasePlaces():
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
+@app.route('/pointsBoard')
+def pointsBoard():
+    # BUG n°11 : page publique en lecture seule (GET uniquement),
+    # accessible sans connexion
+    return render_template(
+        'points_board.html', clubs_points=getClubsPoints()
+    )
 
 
 @app.route('/logout')

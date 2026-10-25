@@ -8,6 +8,8 @@
 <body>
     <h2>Welcome, {{club['email']}}</h2>
     <a href="{{url_for('logout')}}">Logout</a>
+        {# BUG n°11 : lien vers le tableau public des points #}
+    <a href="{{ url_for('pointsBoard') }}">Clubs points board</a>
 
     {# BUG n°10 : le {% with %} est maintenant refermé juste après les messages #}
     {% with messages = get_flashed_messages() %}

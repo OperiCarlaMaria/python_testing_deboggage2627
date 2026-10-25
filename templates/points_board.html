@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Points Board | GUDLFT Registration</title>
+</head>
+<body>
+    {# BUG n°11 : tableau public en lecture seule, sans formulaire #}
+    <h1>Clubs points board</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Club</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in clubs_points %}
+            <tr>
+                <td>{{ entry['name'] }}</td>
+                <td>{{ entry['points'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{{ url_for('index') }}">Back to login</a></p>
+</body>
+</html>

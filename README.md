@@ -1,81 +1,160 @@
-# Intro
+# GÜDLFT - Application de réservation de compétitions
+
+Version légère (POC) d'une plateforme de réservation pour des compétitions
+locales et régionales. Les **secrétaires de clubs** utilisent les points de leur
+club pour réserver des places pour leurs athlètes. Un tableau public, sans
+connexion, affiche les points de tous les clubs, par souci de transparence.
+
+Ce dépôt est notre version du projet : nous avons repris le code de départ, corrigé
+les bugs de la phase 1, implémenté la phase 2, et ajouté les tests et les rapports.
+
+## Règles métier
+- Un point = une place réservée.
+- Un club ne peut pas réserver plus de places que de points.
+- Un club ne peut pas réserver plus de **12 places** par compétition (en cumulé).
+- Une réservation ne peut pas dépasser les places disponibles.
+- On ne peut pas réserver sur une compétition **déjà passée**.
+- Seul un secrétaire connecté (email d'un club) peut réserver.
+- Le tableau des points est public, en lecture seule, trié par nom de club.
+
+## Technologies
+- Python 3.x
+- [Flask](https://flask.palletsprojects.com/) (framework web léger)
+- Fichiers JSON à la place d'une base de données
+- [pytest](https://docs.pytest.org/) (tests), [coverage](https://coverage.readthedocs.io/) (couverture),
+  [Locust](https://locust.io/) (performance), [flake8](https://flake8.pycqa.org/) (style)
+
+## Installation
+```bash
+git clone https://github.com/OperiCarlaMaria/python_testing_deboggage2627.git
+cd python_testing_deboggage2627
+python -m venv venv
 ```
-Hey,
+Activer l'environnement virtuel :
+- Windows (PowerShell) : `venv\Scripts\activate`
+- Mac / Linux : `source venv/bin/activate`
 
-Je viens de recevoir le rapport de QA pour la phase 1 du projet. Il y a plusieurs bogues, dont un qui fait planter l'application ! 
-Malheureusement, je ne suis pas au bureau pour les prochains jours (un de mes enfants est tombé malade ce week-end). 
-Je ne sais pas encore quand je pourrai être là dans la semaine. Pourriez-vous prendre en charge la mise en œuvre du projet ? 
-Vous devrez régler les bogues de la phase 1 et mettre en œuvre les éléments de la phase 2 (j'ai ajouté le travail de la phase 2 et les bogues de la section “issues” du repo). 
-
-Vous devrez cloner et forker le repo et le mettre en place sur votre machine locale (tout ce dont vous avez besoin se trouve dans le fichier README). 
-Ensuite, passez en revue les bogues dans la section des problèmes, puis essayez de reproduire les problèmes sur votre machine locale pour résoudre les bogues et ajouter la gestion des erreurs. 
-Pour gagner du temps de configuration, nous utilisons Flask et JSON pour éviter d'utiliser une base de données. 
-La plupart des outils dont vous aurez besoin se trouvent dans le fichier requirements.txt dans le repo, 
-mais vous devrez installer Flask et notre framework de test préféré, pytest, ainsi que notre outil de test de performance, Locust. 
-
-Vous devrez également préparer un rapport de test et un rapport de performances, 
-conformément au guide de développement à la fin des spécifications fonctionnelles ci-jointes. 
-Veillez à suivre toutes les directives, car le QA nous reproche de ne pas respecter les normes. 
-Vous devez tester de manière approfondie les résultats requis (à la fois les happy paths et les sad paths) pour toutes les fonctionnalités de l'application.  
-Je vous encourage également à adopter une approche de TDD, car cela vous aidera à rationaliser votre travail. 
-
-Une fois que vous aurez terminé, nous ferons un examen de ce que vous avez dans la branche QA du code. 
-Nous examinerons les rapports et la manière dont vous avez résolu les problèmes, 
-nous examinerons votre code et nous testerons la couverture de la nouvelle fonctionnalité. 
-
-Merci !
-
+Installer les dépendances :
+```bash
+pip install -r requirements.txt
 ```
-1. Why
+Si l'installation de Flask échoue avec une version récente de Python, installez
+des versions plus récentes (`pip install flask`) puis mettez à jour `requirements.txt`
+avec `pip freeze > requirements.txt`.
 
+## Lancer l'application
+Windows (PowerShell) :
+```powershell
+$env:FLASK_APP = "server.py"
+flask run
+```
+Mac / Linux :
+```bash
+export FLASK_APP=server.py
+flask run
+```
+Puis ouvrir http://127.0.0.1:5000 dans le navigateur.
 
-    This is a proof of concept (POC) project to show a light-weight version of our competition booking platform. The aim is the keep things as light as possible, and use feedback from the users to iterate.
+Pages principales :
+- `/` : connexion par email
+- `/showSummary` : tableau de bord du club (après connexion)
+- `/book/<competition>/<club>` : page de réservation
+- `/pointsBoard` : tableau public des points (sans connexion)
 
-2. Getting Started
+## Données
+L'application lit deux fichiers JSON au démarrage (redémarrer le serveur après toute modification) :
+- `clubs.json` : nom, email et points de chaque club. Les emails de ce fichier sont
+  ceux acceptés pour la connexion.
+- `competitions.json` : nom, date (`AAAA-MM-JJ HH:MM:SS`) et nombre de places.
 
-    This project uses the following technologies:
+Les points et les places sont des **nombres sans guillemets**. Les réservations
+sont gardées en mémoire : elles sont perdues au redémarrage du serveur.
 
-    * Python v3.x+
+## Tests
+Tous les tests sont dans le dossier `tests/`, séparés en trois catégories :
+```
+tests/
+  unit/          tests unitaires (fonctions isolées)
+  integration/   tests d'intégration (routes, templates, temps de réponse)
+  functional/    tests fonctionnels (parcours complets d'un secrétaire)
+  performance/   scénario Locust
+  conftest.py    fixtures communes (client de test, données réinitialisées)
+```
+Lancer tous les tests :
+```bash
+python -m pytest -v
+```
+Lancer une catégorie : `python -m pytest tests/unit`
 
-    * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+**Résultat actuel : 168 tests, 168 réussis.** Les tests couvrent les cas valides
+(happy paths) et les cas refusés (sad paths).
 
-        Whereas Django does a lot of things for us out of the box, Flask allows us to add only what we need. 
-     
+### Couverture
+```bash
+coverage run -m pytest
+coverage report -m
+coverage html        # rapport détaillé dans htmlcov/index.html
+```
+Couverture actuelle de `server.py` : **100 %** (objectif : 60 % minimum).
+La configuration est dans `.coveragerc`.
 
-    * [Virtual environment](https://virtualenv.pypa.io/en/stable/installation.html)
+### Performance (Locust)
+Les spécifications imposent moins de 5 secondes pour afficher la liste des
+compétitions et moins de 2 secondes pour mettre à jour les points, avec 6 utilisateurs.
 
-        This ensures you'll be able to install the correct packages without interfering with Python on your machine.
+Dans un premier terminal, lancer le serveur (`flask run`). Dans un second :
+```bash
+locust -f tests/performance/locustfile.py --headless -u 6 -r 6 -t 30s --host http://127.0.0.1:5000 --html tests/performance/rapport_locust.html
+```
+Résultat : 88 requêtes, **0 échec**, temps maximum de 156 ms.
 
-        Before you begin, please ensure you have this installed globally. 
+## Rapports
+Les rapports demandés sont dans le dossier `rapports/` :
+- `rapport_tests.md` : tests, couverture, bugs corrigés et tests associés
+- `rapport_couverture.txt` : sortie brute de `coverage report -m`
+- `rapport_performance.md` : résultats Locust
+- `rapport_flake8.md` : rapport flake8 (voir aussi ci-dessous)
 
+## Rapport flake8
+Configuration dans `.flake8` : ligne maximale de 100 caractères.
+```bash
+flake8 --count
+```
+- Avant correction : **87 avertissements** (mise en forme : espaces, lignes vides, commentaires).
+  Voir `rapports/flake8_avant.txt`.
+- Après correction : **0 avertissement**. Voir `rapports/flake8_apres.txt`.
 
-3. Installation
+## Bugs corrigés
+| N° | Problème | Branche |
+|---|---|---|
+| 1 | Crash avec un email inconnu | `bug/email-inconnu` |
+| 2 | Points non déduits après réservation | `bug/points-non-deduits` |
+| 3 | Réservation avec plus de points que disponibles | `bug/points-insuffisants` |
+| 4 | Plus de 12 places par club et par compétition | `bug/limite-12-places` |
+| 5 | Plus de places que disponibles / compétition complète | `bug/places-depassent-disponibles` |
+| 6 | Réservation sur une compétition passée | `bug/competition-passee` |
+| 7 et 8 | Crash avec un club ou une compétition inconnus, saisie invalide | `bug/saisie-invalide` |
+| 9 et 10 | Nombres en chaînes dans les JSON, HTML cassé | `amelioration/nettoyage-html-et-types` |
+| 11 | Tableau public des points (phase 2) | `feature/tableau-points-public` |
+| 12 | Message de confirmation sans le nombre de places | `bug/message-confirmation` |
 
-    - After cloning, change into the directory and type <code>virtualenv .</code>. This will then set up a a virtual python environment within that directory.
+Les autres branches : `amelioration/style-css`, `amelioration/tests-fonctionnels`,
+`amelioration/tests-performance`, `amelioration/couverture-tests`,
+`amelioration/conformite-flake8`, `amelioration/tests-unitaires-supplementaires`
+et `amelioration/readme`.
 
-    - Next, type <code>source bin/activate</code>. You should see that your command prompt has changed to the name of the folder. This means that you can install packages in here without affecting affecting files outside. To deactivate, type <code>deactivate</code>
+## Conventions de travail
+- `main` est la branche de référence : elle contient du code qui fonctionne et dont
+  tous les tests passent.
+- Une branche par bug, fonctionnalité ou amélioration, nommée
+  `<bug|feature|amelioration>/nom-descriptif`, puis une Pull Request vers `main`.
+- Les tests sont écrits avant le correctif (TDD) : un test qui échoue, puis le correctif.
+- La branche **`QA`** est créée depuis `main` pour la relecture et n'est **jamais fusionnée**.
+- Les commentaires dans le code sont en français et indiquent le numéro du bug corrigé.
 
-    - Rather than hunting around for the packages you need, you can install in one step. Type <code>pip install -r requirements.txt</code>. This will install all the packages listed in the respective file. If you install a package, make sure others know by updating the requirements.txt file. An easy way to do this is <code>pip freeze > requirements.txt</code>
-
-    - Flask requires that you set an environmental variable to the python file. However you do that, you'll want to set the file to be <code>server.py</code>. Check [here](https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application) for more details
-
-    - You should now be ready to test the application. In the directory, type either <code>flask run</code> or <code>python -m flask run</code>. The app should respond with an address you should be able to go to using your browser.
-
-4. Current Setup
-
-    The app is powered by [JSON files](https://www.tutorialspoint.com/json/json_quick_guide.htm). This is to get around having a DB until we actually need one. The main ones are:
-     
-    * competitions.json - list of competitions
-    * clubs.json - list of clubs with relevant information. You can look here to see what email addresses the app will accept for login.
-
-5. Testing
-
-    You are free to use whatever testing framework you like-the main thing is that you can show what tests you are using.
-
-    We also like to show how well we're testing, so there's a module called 
-    [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
-   
- 6. Flake8 Report 
-    
-
-
+## Ressources
+- Spécifications fonctionnelles : `Spécifications fonctionnelles.pdf`
+- [Documentation Flask](https://flask.palletsprojects.com/)
+- [Documentation pytest](https://docs.pytest.org/)
+- [Documentation coverage](https://coverage.readthedocs.io/)
+- [Documentation Locust](https://docs.locust.io/)

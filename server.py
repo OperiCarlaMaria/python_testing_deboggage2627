@@ -1,6 +1,6 @@
 import json
-from datetime import datetime ##ajout d'import pour les dates
-from flask import Flask,render_template,request,redirect,flash,url_for
+from datetime import datetime  # ajout d'import pour les dates
+from flask import Flask, render_template, request, redirect, flash, url_for
 
 
 def loadClubs():
@@ -28,17 +28,22 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
-## bug 1 emails
-def getClubByEmail(email): 
+# bug 1 emails
+
+
+def getClubByEmail(email):
     return next((club for club in clubs if club['email'] == email), None)
 
-## "bug" 7 eviter les erreurs du genre entré des chiffre négatifs etc...
+# "bug" 7 eviter les erreurs du genre entré des chiffre négatifs etc...
+
+
 def getClubByName(name):
     return next((club for club in clubs if club['name'] == name), None)
 
 
 def getCompetitionByName(name):
     return next((c for c in competitions if c['name'] == name), None)
+
 
 def getClubsPoints():
     # BUG n°11 : données du tableau public des points
@@ -57,7 +62,8 @@ def parsePlaces(raw):
         return None
     return places if places >= 1 else None
 
-##bug 6 date compétition 
+
+# bug 6 date compétition
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 
@@ -70,28 +76,33 @@ def isCompetitionPast(competition):
 
 app.jinja_env.globals['is_past'] = isCompetitionPast
 
-## bug 4 limite de réservation 
+# bug 4 limite de réservation
 MAX_PLACES_PER_COMPETITION = 12
 
 
 def getPlacesBooked(club, competition):
     return competition.get('booked', {}).get(club['name'], 0)
 
-## bug 2 points/ bug 4
+# bug 2 points/ bug 4
+
+
 def bookPlaces(club, competition, placesRequired):
     club['points'] = int(club['points']) - placesRequired
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
     booked = competition.setdefault('booked', {})
     booked[club['name']] = booked.get(club['name'], 0) + placesRequired
-    
+
+
 def confirmationMessage(placesRequired, competition):
     # BUG n°12 : la spec demande un message qui confirme le nombre de places
     # achetées (avant, le message ne contenait aucun nombre)
     return "Great-booking complete! You booked {} place(s) for {}.".format(
         placesRequired, competition['name']
     )
-    
-## bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5/ bug 6
+
+# bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5/ bug 6
+
+
 def validatePurchase(club, competition, placesRequired):
     available = int(competition['numberOfPlaces'])
     if isCompetitionPast(competition):
@@ -106,12 +117,15 @@ def validatePurchase(club, competition, placesRequired):
         return "You cannot book more than 12 places per competition."
     return None
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-## changement de route bug 1 emails
-@app.route('/showSummary', methods=['POST']) 
+# changement de route bug 1 emails
+
+
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
     club = getClubByEmail(request.form.get('email', ''))
     if club is None:
@@ -119,7 +133,9 @@ def showSummary():
         return render_template('index.html')
     return render_template('welcome.html', club=club, competitions=competitions)
 
-## bug 6 date compétition/"bug" 7
+# bug 6 date compétition/"bug" 7
+
+
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     foundClub = getClubByName(club)
@@ -135,7 +151,9 @@ def book(competition, club):
         return render_template('welcome.html', club=foundClub, competitions=competitions)
     return render_template('booking.html', club=foundClub, competition=foundCompetition)
 
-## changement de route bug 2 points et bug 3/ "bug" 7
+# changement de route bug 2 points et bug 3/ "bug" 7
+
+
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     club = getClubByName(request.form.get('club', ''))
@@ -155,7 +173,7 @@ def purchasePlaces():
         flash(error)
         return render_template('welcome.html', club=club, competitions=competitions)
     bookPlaces(club, competition, placesRequired)
-        # BUG n°12 : message avec le nombre de places et le nom de la compétition
+    # BUG n°12 : message avec le nombre de places et le nom de la compétition
     flash(confirmationMessage(placesRequired, competition))
     return render_template('welcome.html', club=club, competitions=competitions)
 

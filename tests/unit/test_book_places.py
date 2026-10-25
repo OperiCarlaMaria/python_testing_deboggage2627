@@ -13,8 +13,10 @@ def test_book_places_deducts_places_from_competition():
     competition = {"name": "Test Comp", "numberOfPlaces": "25"}
     bookPlaces(club, competition, 3)
     assert competition["numberOfPlaces"] == 22
-    
-## test bug 4 restriction réservation de places
+
+# test bug 4 restriction réservation de places
+
+
 def test_book_places_records_places_booked_by_club():
     club = {"name": "Test Club", "points": "13"}
     competition = {"name": "Test Comp", "numberOfPlaces": "25"}

@@ -1,0 +1,4 @@
+# AMÉLIORATION : configuration de flake8 (demandé dans le README)
+[flake8]
+max-line-length = 100
+exclude = venv,htmlcov,.git,__pycache__

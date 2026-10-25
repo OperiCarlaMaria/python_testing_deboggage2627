@@ -14,10 +14,10 @@ def test_purchase_deducts_places_shown_on_summary(client):
         data={"club": "Simply Lift", "competition": "Spring Festival", "places": "3"},
     )
     assert b"Number of Places: 22" in response.data
-    
-    
-    
-def test_purchase_rejected_when_not_enough_points(client): ## bug 3 point insuffisant et reservation allant au delà test
+
+
+# bug 3 point insuffisant et reservation allant au delà test
+def test_purchase_rejected_when_not_enough_points(client):
     response = client.post(
         "/purchasePlaces",
         data={"club": "Iron Temple", "competition": "Spring Festival", "places": "5"},
@@ -36,9 +36,9 @@ def test_purchase_accepted_when_places_equal_points(client):
     )
     assert b"Great-booking complete!" in response.data
     assert b"Points available: 0" in response.data
-    
-    
-## test bug 4  réservation de places
+
+
+# test bug 4  réservation de places
 def test_purchase_rejected_when_more_than_12_places(client):
     response = client.post(
         "/purchasePlaces",
@@ -72,8 +72,10 @@ def test_purchase_rejected_when_cumulative_bookings_exceed_12(client):
     assert b"more than 12 places" in response.data
     assert b"Points available: 5" in response.data
     assert b"Number of Places: 17" in response.data
-    
-## bug 5 test reserver plus de place qu'il n'en reste 
+
+# bug 5 test reserver plus de place qu'il n'en reste
+
+
 def book(client, club, competition, places):
     return client.post(
         "/purchasePlaces",
@@ -105,16 +107,17 @@ def test_purchase_rejected_when_competition_is_full(client):
     assert b"This competition is full." in response.data
     assert b"Great-booking complete!" not in response.data
     assert b"Points available: 4" in response.data
-    
-    
-## bug 6 test date passée
+
+
+# bug 6 test date passée
 def test_purchase_rejected_for_past_competition(client):
     response = book(client, "Simply Lift", "Past Competition", "2")
     assert b"This competition is already over." in response.data
     assert b"Great-booking complete!" not in response.data
     assert b"Points available: 13" in response.data
     assert b"Number of Places: 7" in response.data
-    
+
+
 def test_purchase_confirmation_shows_number_of_places(client):
     # BUG n°12 : le message de la page doit contenir le nombre de places achetées
     response = book(client, "Simply Lift", "Spring Festival", "3")

@@ -1,17 +1,24 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking for {{competition['name']}} || GUDLFT</title>
+    {# AMÉLIORATION : feuille de style #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="container">
     <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
+    <p>Places available: {{competition['numberOfPlaces']}}</p>
     <form action="/purchasePlaces" method="post">
         <input type="hidden" name="club" value="{{club['name']}}">
         <input type="hidden" name="competition" value="{{competition['name']}}">
-        <label for="places">How many places?</label><input type="number" name="places" id="places" min="1" required/>
+        <label for="places">How many places?</label>
+        {# BUG n°8 : min="1" et required, la vraie validation reste côté serveur #}
+        <input type="number" name="places" id="places" min="1" required/>
         <button type="submit">Book</button>
     </form>
+</div>
 </body>
 </html>

@@ -20,14 +20,20 @@ des données stables (dates des compétitions fixées) et la remise à zéro des
 données après chaque test.
 
 ## Résultats
-**93 tests, 93 réussis, 0 échec.**
+**168 tests, 168 réussis, 0 échec.**
 
 | Catégorie | Nombre de tests |
 |---|---|
-| Unitaires | 41 |
+| Unitaires | 116 |
 | Intégration | 47 |
 | Fonctionnels | 5 |
-| **Total** | **93** |
+| **Total** | **168** |
+
+Ratio unitaires / (intégration + fonctionnels) : 116 pour 52, soit **environ 2,2 pour 1**.
+L'objectif du guide (deux fois plus de tests unitaires) est atteint.
+Remarque : pytest compte chaque cas d'un test paramétré (`@pytest.mark.parametrize`)
+comme un test distinct. Chaque cas correspond à une valeur d'entrée différente
+(valeur limite exacte, juste au-dessus, saisie invalide).
 
 ## Couverture
 | Fichier | Instructions | Manquées | Branches | Couverture |
@@ -68,9 +74,6 @@ l'échec, puis le code a été corrigé jusqu'à obtenir des tests verts. Chaque
 a été traité dans sa propre branche (`bug/...`, `feature/...`, `amelioration/...`).
 
 ## Limites et points d'amélioration
-- **Ratio de tests** : le guide recommande environ deux fois plus de tests unitaires
-  que de tests d'intégration et fonctionnels. Nous en avons 41 pour 52, soit un ratio
-  d'environ 0,8 pour 1 : l'objectif n'est pas encore atteint.
 - Les données sont en mémoire (fichiers JSON) : les réservations ne sont pas
   sauvegardées après un redémarrage du serveur.
 - Les tests de performance ont été réalisés en local avec le serveur de

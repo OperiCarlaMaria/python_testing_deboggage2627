@@ -84,6 +84,13 @@ def bookPlaces(club, competition, placesRequired):
     booked = competition.setdefault('booked', {})
     booked[club['name']] = booked.get(club['name'], 0) + placesRequired
     
+def confirmationMessage(placesRequired, competition):
+    # BUG n°12 : la spec demande un message qui confirme le nombre de places
+    # achetées (avant, le message ne contenait aucun nombre)
+    return "Great-booking complete! You booked {} place(s) for {}.".format(
+        placesRequired, competition['name']
+    )
+    
 ## bug 3 points insuffisant et réservation allant au delà/ bug 4/ bug 5/ bug 6
 def validatePurchase(club, competition, placesRequired):
     available = int(competition['numberOfPlaces'])
@@ -148,7 +155,8 @@ def purchasePlaces():
         flash(error)
         return render_template('welcome.html', club=club, competitions=competitions)
     bookPlaces(club, competition, placesRequired)
-    flash('Great-booking complete!')
+        # BUG n°12 : message avec le nombre de places et le nom de la compétition
+    flash(confirmationMessage(placesRequired, competition))
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

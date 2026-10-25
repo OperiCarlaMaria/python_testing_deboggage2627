@@ -1,0 +1,88 @@
+﻿.\server.py:2:30: E261 at least two spaces before inline comment
+.\server.py:2:31: E262 inline comment should start with '# '
+.\server.py:3:24: E231 missing whitespace after ','
+.\server.py:3:40: E231 missing whitespace after ','
+.\server.py:3:48: E231 missing whitespace after ','
+.\server.py:3:57: E231 missing whitespace after ','
+.\server.py:3:63: E231 missing whitespace after ','
+.\server.py:31:1: E266 too many leading '#' for block comment
+.\server.py:32:1: E302 expected 2 blank lines, found 1
+.\server.py:32:27: W291 trailing whitespace
+.\server.py:35:1: E266 too many leading '#' for block comment
+.\server.py:36:1: E302 expected 2 blank lines, found 1
+.\server.py:43:1: E302 expected 2 blank lines, found 1
+.\server.py:60:1: E265 block comment should start with '# '
+.\server.py:60:25: W291 trailing whitespace
+.\server.py:61:1: E305 expected 2 blank lines after class or function definition, found 1
+.\server.py:73:1: E266 too many leading '#' for block comment
+.\server.py:73:31: W291 trailing whitespace
+.\server.py:80:1: E266 too many leading '#' for block comment
+.\server.py:81:1: E302 expected 2 blank lines, found 1
+.\server.py:86:1: W293 blank line contains whitespace
+.\server.py:87:1: E302 expected 2 blank lines, found 1
+.\server.py:93:1: W293 blank line contains whitespace
+.\server.py:94:1: E266 too many leading '#' for block comment
+.\server.py:95:1: E302 expected 2 blank lines, found 1
+.\server.py:109:1: E302 expected 2 blank lines, found 1
+.\server.py:113:1: E266 too many leading '#' for block comment
+.\server.py:114:1: E302 expected 2 blank lines, found 1
+.\server.py:114:45: W291 trailing whitespace
+.\server.py:122:1: E266 too many leading '#' for block comment
+.\server.py:123:1: E302 expected 2 blank lines, found 1
+.\server.py:138:1: E266 too many leading '#' for block comment
+.\server.py:139:1: E302 expected 2 blank lines, found 1
+.\server.py:158:9: E116 unexpected indentation (comment)
+.\server.py:174:38: W292 no newline at end of file
+.\tests\conftest.py:31:21: W292 no newline at end of file
+.\tests\functional\test_user_journey.py:110:39: W292 no newline at end of file
+.\tests\integration\test_competition_pages.py:21:54: W292 no newline at end of file
+.\tests\integration\test_input_validation.py:52:52: W292 no newline at end of file
+.\tests\integration\test_login_route.py:10:41: W292 no newline at end of file
+.\tests\integration\test_points_board_route.py:42:51: W292 no newline at end of file
+.\tests\integration\test_purchase_route.py:17:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:18:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:19:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:20:1: E303 too many blank lines (3)
+.\tests\integration\test_purchase_route.py:20:59: E261 at least two spaces before inline comment
+.\tests\integration\test_purchase_route.py:20:60: E262 inline comment should start with '# '
+.\tests\integration\test_purchase_route.py:20:101: E501 line too long (120 > 100 characters)
+.\tests\integration\test_purchase_route.py:39:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:40:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:41:1: E266 too many leading '#' for block comment
+.\tests\integration\test_purchase_route.py:75:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:76:1: E266 too many leading '#' for block comment
+.\tests\integration\test_purchase_route.py:76:54: W291 trailing whitespace
+.\tests\integration\test_purchase_route.py:77:1: E302 expected 2 blank lines, found 1
+.\tests\integration\test_purchase_route.py:108:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:109:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:110:1: E266 too many leading '#' for block comment
+.\tests\integration\test_purchase_route.py:117:1: W293 blank line contains whitespace
+.\tests\integration\test_purchase_route.py:118:1: E302 expected 2 blank lines, found 1
+.\tests\integration\test_purchase_route.py:121:73: W292 no newline at end of file
+.\tests\integration\test_response_time.py:34:40: W292 no newline at end of file
+.\tests\integration\test_style.py:41:51: W292 no newline at end of file
+.\tests\integration\test_templates.py:24:52: W292 no newline at end of file
+.\tests\performance\locustfile.py:82:42: W292 no newline at end of file
+.\tests\unit\test_book_places.py:16:1: W293 blank line contains whitespace
+.\tests\unit\test_book_places.py:17:1: E266 too many leading '#' for block comment
+.\tests\unit\test_book_places.py:18:1: E302 expected 2 blank lines, found 1
+.\tests\unit\test_book_places.py:23:51: W292 no newline at end of file
+.\tests\unit\test_competition_date.py:3:1: E302 expected 2 blank lines, found 1
+.\tests\unit\test_competition_date.py:12:53: W292 no newline at end of file
+.\tests\unit\test_confirmation_message.py:21:85: W292 no newline at end of file
+.\tests\unit\test_data_loading.py:24:62: W292 no newline at end of file
+.\tests\unit\test_input_parsing.py:32:63: W292 no newline at end of file
+.\tests\unit\test_login.py:15:38: W292 no newline at end of file
+.\tests\unit\test_points_board.py:29:58: W292 no newline at end of file
+.\tests\unit\test_validate_purchase.py:21:1: W293 blank line contains whitespace
+.\tests\unit\test_validate_purchase.py:22:1: W293 blank line contains whitespace
+.\tests\unit\test_validate_purchase.py:23:1: E266 too many leading '#' for block comment
+.\tests\unit\test_validate_purchase.py:48:1: W293 blank line contains whitespace
+.\tests\unit\test_validate_purchase.py:49:1: W293 blank line contains whitespace
+.\tests\unit\test_validate_purchase.py:50:1: E266 too many leading '#' for block comment
+.\tests\unit\test_validate_purchase.py:50:54: W291 trailing whitespace
+.\tests\unit\test_validate_purchase.py:69:1: W293 blank line contains whitespace
+.\tests\unit\test_validate_purchase.py:70:1: E266 too many leading '#' for block comment
+.\tests\unit\test_validate_purchase.py:71:1: E302 expected 2 blank lines, found 1
+.\tests\unit\test_validate_purchase.py:75:56: W292 no newline at end of file
+87

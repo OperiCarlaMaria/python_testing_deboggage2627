@@ -1,5 +1,6 @@
 from server import isCompetitionPast
 
+
 def test_competition_in_the_past_is_past():
     assert isCompetitionPast({"name": "X", "date": "2020-01-01 10:00:00"}) is True
 

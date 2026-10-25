@@ -4,15 +4,22 @@ from flask import Flask,render_template,request,redirect,flash,url_for
 
 
 def loadClubs():
+    # BUG n°9 : les points étaient des chaînes ("13"), on les convertit
+    # en entiers dès le chargement
     with open('clubs.json') as c:
         listOfClubs = json.load(c)['clubs']
-        return listOfClubs
+    for club in listOfClubs:
+        club['points'] = int(club['points'])
+    return listOfClubs
 
 
 def loadCompetitions():
+    # BUG n°9 : même correction pour le nombre de places
     with open('competitions.json') as comps:
         listOfCompetitions = json.load(comps)['competitions']
-        return listOfCompetitions
+    for competition in listOfCompetitions:
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])
+    return listOfCompetitions
 
 
 app = Flask(__name__)

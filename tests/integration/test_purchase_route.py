@@ -114,3 +114,8 @@ def test_purchase_rejected_for_past_competition(client):
     assert b"Great-booking complete!" not in response.data
     assert b"Points available: 13" in response.data
     assert b"Number of Places: 7" in response.data
+    
+def test_purchase_confirmation_shows_number_of_places(client):
+    # BUG n°12 : le message de la page doit contenir le nombre de places achetées
+    response = book(client, "Simply Lift", "Spring Festival", "3")
+    assert b"You booked 3 place(s) for Spring Festival" in response.data

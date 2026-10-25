@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Points Board | GUDLFT Registration</title>
+    {# AMÉLIORATION : feuille de style #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="container">
     {# BUG n°11 : tableau public en lecture seule, sans formulaire #}
     <h1>Clubs points board</h1>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Club</th>
@@ -24,6 +27,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <p><a href="{{ url_for('index') }}">Back to login</a></p>
+    <p><a class="button" href="{{ url_for('index') }}">Back to login</a></p>
+</div>
 </body>
 </html>

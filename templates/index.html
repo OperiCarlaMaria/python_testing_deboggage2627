@@ -4,28 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUDLFT Registration</title>
+    {# AMÉLIORATION : feuille de style #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="container">
     <h1>Welcome to the GUDLFT Registration Portal!</h1>
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <ul>
+    <ul class="messages">
         {% for message in messages %}
-        <li>{{ message }}</li>
+        {# AMÉLIORATION : classe "success" ou "error" pour styler le message #}
+        <li class="flash {% if message.startswith('Great-booking') %}success{% else %}error{% endif %}">{{ message }}</li>
         {% endfor %}
     </ul>
     {% endif %}
     {% endwith %}
 
-    Please enter your secretary email to continue:
+    <p>Please enter your secretary email to continue:</p>
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
-        {# BUG n°10 : l'id était vide, le label n'était relié à rien #}
         <input type="email" name="email" id="email" required/>
         <button type="submit">Enter</button>
     </form>
-        {# BUG n°11 : lien public vers le tableau des points #}
+
+    {# BUG n°11 : lien public vers le tableau des points #}
     <p><a href="{{ url_for('pointsBoard') }}">View clubs points</a></p>
+</div>
 </body>
 </html>

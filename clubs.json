@@ -12,5 +12,25 @@
     {   "name":"She Lifts",
         "email": "kate@shelifts.co.uk",
         "points":12
+    },
+    {
+        "name":"Power Lifters",
+        "email":"power@powerlifters.com",
+        "points":8
+    },
+    {
+        "name":"Strong Together",
+        "email":"contact@strongtogether.org",
+        "points":15
+    },
+    {
+        "name":"Barbell Brothers",
+        "email":"info@barbellbrothers.fr",
+        "points":20
+    },
+    {
+        "name":"Kettle Crew",
+        "email":"hello@kettlecrew.com",
+        "points":6
     }
 ]}

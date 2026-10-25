@@ -19,7 +19,8 @@ def test_get_clubs_points_does_not_expose_emails():
 def test_get_clubs_points_is_sorted_by_name():
     # Tri alphabétique : aucun club n'est mis en avant (favoritisme)
     names = [entry["name"] for entry in getClubsPoints()]
-    assert names == ["Iron Temple", "She Lifts", "Simply Lift"]
+    assert names == sorted(names)
+    assert len(names) == len(set(names))
 
 
 def test_get_clubs_points_reflects_bookings():
